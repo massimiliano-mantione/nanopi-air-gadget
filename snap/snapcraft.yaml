@@ -1,10 +1,11 @@
 name: nanopi-air
-version: 16-0.1
+version: 18-0.1
 summary: NanoPi NEO Air
 description: |
  Bootloader files and partitoning data to create a
  bootable Ubuntu Core image for the NanoPi NEO Air.
 type: gadget
+base: core18
 
 architectures:
   - build-on: amd64
@@ -20,7 +21,7 @@ parts:
     source-branch: v2018.05
     override-build: |
       set -e
-      git apply ../../../uboot.patch
+      git apply ../../../project/uboot.patch
       if [ "$(arch)" = "x86_64" ]; then
         TCHAINVER="$(wget -q -O - \
                    https://releases.linaro.org/components/toolchain/binaries/latest-7/arm-linux-gnueabihf/| \
@@ -38,7 +39,7 @@ parts:
         make
       fi
       cp u-boot-sunxi-with-spl.bin $SNAPCRAFT_PART_INSTALL/
-      tools/mkenvimage -r -s 131072 -o $SNAPCRAFT_PART_INSTALL/uboot.env ../../../uboot.env.in
+      tools/mkenvimage -r -s 131072 -o $SNAPCRAFT_PART_INSTALL/uboot.env ../../../project/uboot.env.in
       ln -s uboot.env $SNAPCRAFT_PART_INSTALL/uboot.conf
     build-packages:
       - bc
